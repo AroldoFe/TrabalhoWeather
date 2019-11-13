@@ -15,6 +15,5 @@ class EstadoSqlHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
