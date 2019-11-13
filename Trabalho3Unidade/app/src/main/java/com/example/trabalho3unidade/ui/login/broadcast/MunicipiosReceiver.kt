@@ -22,7 +22,7 @@ class MunicipiosReceiver : BroadcastReceiver() {
     }
 
     private fun buscarMunicipios(){
-        var repository: SQLiteRepository = SQLiteRepository(context)
+        var repository = SQLiteRepository(context)
 
         var estados : List<Estado> = repository.list()
 
@@ -34,7 +34,8 @@ class MunicipiosReceiver : BroadcastReceiver() {
                     var cidades: List<Cidade> = response?.body() ?: ArrayList<Cidade>()
 
                     for(cidade in cidades){
-                        repository.save(cidade)
+                        cidade.UF = estado
+                        //repository.save(cidade)
                     }
                 }
 

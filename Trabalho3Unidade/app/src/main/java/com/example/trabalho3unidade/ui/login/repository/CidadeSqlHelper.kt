@@ -8,13 +8,12 @@ class CidadeSqlHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     override fun onCreate(p0: SQLiteDatabase?) {
         p0?.execSQL(
             "CREATE TABLE $TABLE_CIDADES(" +
-                    "$COLUMN_CIDADES_ID INTEGER NOT NULL, " +
+                    "$COLUMN_CIDADES_ID INTEGER PRIMARY KEY, " +
                     "$COLUMN_CIDADES_CIDADE TEXT NOT NULL, " +
-                    "$COLUMN_CIDADES_ESTADO INT NOT NULL)"
+                    "$COLUMN_CIDADES_ESTADO INTEGER NOT NULL)"
         )
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
