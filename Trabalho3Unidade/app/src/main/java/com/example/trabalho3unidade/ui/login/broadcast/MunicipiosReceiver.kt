@@ -34,6 +34,7 @@ class MunicipiosReceiver : BroadcastReceiver() {
                     var cidades: List<Cidade> = response?.body() ?: ArrayList<Cidade>()
 
                     for(cidade in cidades){
+                        cidade.UF = estado
                         repository.save(cidade)
                     }
                 }
