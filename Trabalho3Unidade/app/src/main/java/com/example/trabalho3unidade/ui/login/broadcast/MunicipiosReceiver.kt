@@ -35,7 +35,9 @@ class MunicipiosReceiver : BroadcastReceiver() {
 
                     for(cidade in cidades){
                         cidade.UF = estado
+
                         //repository.save(cidade)
+
                     }
                 }
 

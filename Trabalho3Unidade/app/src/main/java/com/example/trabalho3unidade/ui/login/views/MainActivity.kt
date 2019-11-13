@@ -1,9 +1,9 @@
 package com.example.trabalho3unidade.ui.login.views
 
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -12,6 +12,7 @@ import com.example.trabalho3unidade.ui.login.broadcast.MunicipiosReceiver
 import com.example.trabalho3unidade.ui.login.model.Estado
 import com.example.trabalho3unidade.ui.login.repository.SQLiteRepository
 import com.example.trabalho3unidade.ui.login.retrofit.RetrofitInicializer
+import com.example.trabalho3unidade.ui.login.service.SaveApiBoundService
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,9 +20,22 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    private var mySaveApiBoundService: SaveApiBoundService? = null
+
     companion object{
         lateinit var repository: SQLiteRepository
         lateinit var municipiosReceiver: MunicipiosReceiver
+    }
+
+    private val myConnection = object: ServiceConnection{
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            val binder = p1 as SaveApiBoundService.MyLocalBinder
+            mySaveApiBoundService = binder.getService()
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            mySaveApiBoundService = null
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,18 +44,27 @@ class MainActivity : AppCompatActivity() {
 
         repository = SQLiteRepository(this)
 
-        // Mandar buscar os Estados
-        buscarEstados()
+        /**
+         * Só deve consultar a API do IBGE se o banco estiver vazio
+         */
+        if(repository.list().isNullOrEmpty()){
+            bindService()
+        }
 
         btnListarEstados.setOnClickListener {
             goStateActivity()
         }
 
-        // Cria o BroadcastReceiver para procurar os municipios
-        municipiosReceiver = MunicipiosReceiver()
-        var intentFilter = IntentFilter()
-        intentFilter.addAction("com.example.trabalho3unidade.ui.login.broadcastreceiver.BUSCAR_MUNICIPIOS")
-        registerReceiver(municipiosReceiver, intentFilter)
+    }
+
+    fun bindService(){
+        intent = Intent(this, SaveApiBoundService::class.java)
+        bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
+        mySaveApiBoundService?.getEstados()
+        Thread{
+            Thread.sleep(5000)
+            mySaveApiBoundService?.getCidades()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -64,34 +87,5 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun exibirErro(t: Throwable){
-        Toast.makeText(this, "Erro ao recuperar os Estados!", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun buscarEstados(){
-        val call: Call<List<Estado>> = RetrofitInicializer().ibgeService().allEstados()
-
-        call.enqueue(object : Callback<List<Estado>>{
-            override fun onResponse(call: Call<List<Estado>>, response: Response<List<Estado>>) {
-                var estados : List<Estado> = response?.body() ?: ArrayList<Estado>()
-
-                for(estado in estados){
-                    repository.save(estado)
-                }
-
-                // Lançar BroadcastReceiver para começar a busca das cidades por estado
-                sendBuscarMunicipiosBroadcast()
-            }
-
-            override fun onFailure(call: Call<List<Estado>>, t: Throwable) {
-                exibirErro(t)
-            }
-        })
-    }
-
-    fun sendBuscarMunicipiosBroadcast(){
-        var myIntent = Intent("com.example.trabalho3unidade.ui.login.broadcastreceiver.BUSCAR_MUNICIPIOS")
-        sendBroadcast(myIntent)
-    }
 }
 
