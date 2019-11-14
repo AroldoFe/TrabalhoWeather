@@ -1,4 +1,4 @@
-package com.example.trabalho3unidade.ui.login.views
+package com.example.trabalho3unidade.views
 
 import android.os.Bundle
 import android.widget.Toast

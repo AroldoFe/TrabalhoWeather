@@ -1,4 +1,4 @@
-package com.example.trabalho3unidade.ui.login.model
+package com.example.trabalho3unidade.model
 
 import java.io.Serializable
 

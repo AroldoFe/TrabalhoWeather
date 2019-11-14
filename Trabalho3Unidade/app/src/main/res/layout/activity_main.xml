@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
-    tools:context=".ui.login.views.MainActivity">
+    tools:context=".views.MainActivity">
 
     <ImageView
         android:layout_gravity="center"

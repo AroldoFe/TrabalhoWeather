@@ -1,4 +1,4 @@
-package com.example.trabalho3unidade.ui.login.retrofit
+package com.example.trabalho3unidade.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

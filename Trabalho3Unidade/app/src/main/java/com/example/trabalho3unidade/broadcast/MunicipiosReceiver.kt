@@ -1,13 +1,13 @@
-package com.example.trabalho3unidade.ui.login.broadcast
+package com.example.trabalho3unidade.broadcast
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import com.example.trabalho3unidade.ui.login.model.Cidade
-import com.example.trabalho3unidade.ui.login.model.Estado
-import com.example.trabalho3unidade.ui.login.repository.SQLiteRepository
-import com.example.trabalho3unidade.ui.login.retrofit.RetrofitInicializer
+import com.example.trabalho3unidade.model.Cidade
+import com.example.trabalho3unidade.model.Estado
+import com.example.trabalho3unidade.repository.SQLiteRepository
+import com.example.trabalho3unidade.retrofit.RetrofitInicializer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
