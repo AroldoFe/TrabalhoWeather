@@ -9,11 +9,10 @@ import com.example.trabalho3unidade.model.Estado
 class SQLiteRepository(ctx: Context): EstadoRepository,
     CidadeRepository {
 
-    private val cHelper: CidadeSqlHelper = CidadeSqlHelper(ctx)
-    private val eHelper: EstadoSqlHelper = EstadoSqlHelper(ctx)
+    private val eHelper: SqlHelper = SqlHelper(ctx)
 
     override fun save(estado: Estado) {
-        val db = eHelper.writableDatabase
+        val db = this.eHelper.writableDatabase
 
         val cv = ContentValues().apply {
             put(COLUMN_ESTADOS_ID, estado.id)
@@ -26,7 +25,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
     }
 
     override fun save(cidade: Cidade) {
-        val db = cHelper.writableDatabase
+        val db = this.eHelper.writableDatabase
 
         val cv = ContentValues().apply {
             put(COLUMN_CIDADES_ID, cidade.id)
@@ -40,7 +39,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
 
     private fun recuperar(sigla: String): Estado{
         val sql = "SELECT * FROM $TABLE_ESTADOS WHERE $COLUMN_ESTADOS_SIGLA = $sigla"
-        val db = eHelper.readableDatabase
+        val db = this.eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val estados = ArrayList<Estado>()
 
@@ -56,7 +55,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
 
     private fun recuperar(id: Int): Estado{
         val sql = "SELECT * FROM $TABLE_ESTADOS WHERE $COLUMN_ESTADOS_ID = $id"
-        val db = eHelper.readableDatabase
+        val db = this.eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val estados = ArrayList<Estado>()
 
@@ -72,7 +71,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
 
     override fun list(): List<Estado> {
         val sql = "SELECT * FROM $TABLE_ESTADOS ORDER BY $COLUMN_ESTADOS_ESTADO"
-        val db = eHelper.readableDatabase
+        val db = this.eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val estados = ArrayList<Estado>()
 
@@ -88,7 +87,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
 
     fun listCidades(): List<Cidade> {
         val sql = "SELECT * FROM $TABLE_CIDADES"
-        val db = cHelper.readableDatabase
+        val db = this.eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val cidades = ArrayList<Cidade>()
 
@@ -105,7 +104,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
 
     fun listCidades(estado: Estado): ArrayList<Cidade>{
         val sql = "SELECT * FROM $TABLE_CIDADES WHERE $COLUMN_CIDADES_ESTADO = ${estado.id} ORDER BY $COLUMN_CIDADES_CIDADE"
-        val db = eHelper.readableDatabase
+        val db = this.eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val cidades = ArrayList<Cidade>()
 
@@ -123,7 +122,7 @@ class SQLiteRepository(ctx: Context): EstadoRepository,
         val estado = recuperar(sigla)
 
         val sql = "SELECT * FROM $TABLE_CIDADES WHERE $COLUMN_CIDADES_ESTADO = ${estado.id}"
-        val db = cHelper.readableDatabase
+        val db = this.eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val cidades = ArrayList<Cidade>()
 

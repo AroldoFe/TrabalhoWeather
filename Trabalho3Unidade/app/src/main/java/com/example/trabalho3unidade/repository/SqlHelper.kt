@@ -6,9 +6,15 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.trabalho3unidade.utils.LOG
 
-class CidadeSqlHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class SqlHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(p0: SQLiteDatabase?) {
-        Log.d(LOG,"\tSQLHelper: Criando tabela de Cidades")
+        Log.d(LOG,"\tSQLHelper: Criando tabela de Estados")
+        p0?.execSQL(
+            "CREATE TABLE $TABLE_ESTADOS(" +
+                    "$COLUMN_ESTADOS_ID INTEGER PRIMARY KEY, " +
+                    "$COLUMN_ESTADOS_SIGLA TEXT NOT NULL, " +
+                    "$COLUMN_ESTADOS_ESTADO TEXT NOT NULL)"
+        )
         p0?.execSQL(
             "CREATE TABLE $TABLE_CIDADES(" +
                     "$COLUMN_CIDADES_ID INTEGER PRIMARY KEY, " +
