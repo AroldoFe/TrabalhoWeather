@@ -41,23 +41,25 @@ class SaveApiBoundService : Service() {
     }
 
     private fun getEstados(){
-        val call: Call<List<Estado>> = RetrofitInicializer().ibgeService().allEstados()
+        var thread = Thread {
+            val call: Call<List<Estado>> = RetrofitInicializer().ibgeService().allEstados()
 
-        call.enqueue(object : Callback<List<Estado>> {
-            override fun onResponse(call: Call<List<Estado>>, response: Response<List<Estado>>) {
-                var estados : List<Estado> = response?.body() ?: ArrayList<Estado>()
-                Log.d(LOG,"\tAPI IBGE: Salvando os Estados")
-                for(estado in estados){
-                    repository.save(estado)
+            call.enqueue(object : Callback<List<Estado>> {
+                override fun onResponse(call: Call<List<Estado>>, response: Response<List<Estado>>) {
+                    var estados : List<Estado> = response?.body() ?: ArrayList<Estado>()
+                    Log.d(LOG,"\tAPI IBGE: Salvando os Estados")
+                    for(estado in estados){
+                        repository.save(estado)
+                    }
+
+                    getCidades()
                 }
 
-                getCidades()
-            }
-
-            override fun onFailure(call: Call<List<Estado>>, t: Throwable) {
-                exibirErro("Erro ao recuperar os estados")
-            }
-        })
+                override fun onFailure(call: Call<List<Estado>>, t: Throwable) {
+                    exibirErro("Erro ao recuperar os estados")
+                }
+            })
+        }.start()
     }
 
     private fun getCidades(){
