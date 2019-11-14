@@ -1,14 +1,16 @@
-package com.example.trabalho3unidade.ui.login.repository
+package com.example.trabalho3unidade.repository
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import com.example.trabalho3unidade.ui.login.model.Cidade
-import com.example.trabalho3unidade.ui.login.model.Estado
+import com.example.trabalho3unidade.model.Cidade
+import com.example.trabalho3unidade.model.Estado
 
-class SQLiteRepository(ctx: Context): EstadoRepository, CidadeRepository {
-    private val eHelper: EstadoSqlHelper = EstadoSqlHelper(ctx)
+class SQLiteRepository(ctx: Context): EstadoRepository,
+    CidadeRepository {
+
     private val cHelper: CidadeSqlHelper = CidadeSqlHelper(ctx)
+    private val eHelper: EstadoSqlHelper = EstadoSqlHelper(ctx)
 
     override fun save(estado: Estado) {
         val db = eHelper.writableDatabase
@@ -52,8 +54,24 @@ class SQLiteRepository(ctx: Context): EstadoRepository, CidadeRepository {
         return estados[0]
     }
 
+    private fun recuperar(id: Int): Estado{
+        val sql = "SELECT * FROM $TABLE_ESTADOS WHERE $COLUMN_ESTADOS_ID = $id"
+        val db = eHelper.readableDatabase
+        val cursor = db.rawQuery(sql, null)
+        val estados = ArrayList<Estado>()
+
+        while(cursor.moveToNext()){
+            val estado = estadoFromCursor(cursor)
+            estados.add(estado)
+        }
+
+        cursor.close()
+        db.close()
+        return estados[0]
+    }
+
     override fun list(): List<Estado> {
-        val sql = "SELECT * FROM $TABLE_ESTADOS"
+        val sql = "SELECT * FROM $TABLE_ESTADOS ORDER BY $COLUMN_ESTADOS_ESTADO"
         val db = eHelper.readableDatabase
         val cursor = db.rawQuery(sql, null)
         val estados = ArrayList<Estado>()
@@ -66,6 +84,39 @@ class SQLiteRepository(ctx: Context): EstadoRepository, CidadeRepository {
         cursor.close()
         db.close()
         return estados
+    }
+
+    fun listCidades(): List<Cidade> {
+        val sql = "SELECT * FROM $TABLE_CIDADES"
+        val db = cHelper.readableDatabase
+        val cursor = db.rawQuery(sql, null)
+        val cidades = ArrayList<Cidade>()
+
+        while(cursor.moveToNext()){
+            val estado = recuperar(cursor.getInt(cursor.getColumnIndex(COLUMN_CIDADES_ESTADO)))
+            val cidade = cidadeFromCursor(cursor, estado)
+            cidades.add(cidade)
+        }
+
+        cursor.close()
+        db.close()
+        return cidades
+    }
+
+    fun listCidades(estado: Estado): ArrayList<Cidade>{
+        val sql = "SELECT * FROM $TABLE_CIDADES WHERE $COLUMN_CIDADES_ESTADO = ${estado.id} ORDER BY $COLUMN_CIDADES_CIDADE"
+        val db = eHelper.readableDatabase
+        val cursor = db.rawQuery(sql, null)
+        val cidades = ArrayList<Cidade>()
+
+        while(cursor.moveToNext()){
+            val cidade = cidadeFromCursor(cursor, estado)
+            cidades.add(cidade)
+        }
+
+        cursor.close()
+        db.close()
+        return cidades
     }
 
     override fun list(sigla: String): List<Cidade> {

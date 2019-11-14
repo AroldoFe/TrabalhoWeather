@@ -1,4 +1,4 @@
-package com.example.trabalho3unidade.ui.login.repository
+package com.example.trabalho3unidade.repository
 
 const val DATABASE_NAME = "db_aplicacao"
 const val DATABASE_VERSION = 1

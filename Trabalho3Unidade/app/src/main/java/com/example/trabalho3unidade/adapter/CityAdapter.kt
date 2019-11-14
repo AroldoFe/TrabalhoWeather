@@ -1,4 +1,4 @@
-package com.example.trabalho3unidade.ui.login.adapter
+package com.example.trabalho3unidade.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trabalho3unidade.R
-import com.example.trabalho3unidade.ui.login.model.Cidade
+import com.example.trabalho3unidade.model.Cidade
 import kotlinx.android.synthetic.main.item_city.view.*
 
 class CityAdapter (private val cidades: List<Cidade>, private val callback: (Cidade) -> Unit): RecyclerView.Adapter<CityAdapter.VH>() {
