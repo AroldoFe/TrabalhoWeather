@@ -1,5 +1,6 @@
 package com.example.trabalho3unidade.retrofit
 
+import com.example.trabalho3unidade.model.Clima
 import com.example.trabalho3unidade.utils.API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -7,5 +8,5 @@ import retrofit2.http.Path
 interface OpenWeatherMapService {
 
     @GET("?q={cityName},br&appid=${API_KEY}")
-    fun getWeatherByCity(@Path("cityName") cityName: String): Clima
+    fun getWeatherByCity(@Path("cityName") cityName: String): Climas
 }
