@@ -6,6 +6,6 @@ import retrofit2.http.Path
 
 interface OpenWeatherMapService {
 
-    @GET("q={cityName},br&appid=${API_KEY}")
-    fun getWeatherCity(@Path("id") cityName: String)
+    @GET("?q={cityName},br&appid=${API_KEY}")
+    fun getWeatherByCity(@Path("cityName") cityName: String): Clima
 }

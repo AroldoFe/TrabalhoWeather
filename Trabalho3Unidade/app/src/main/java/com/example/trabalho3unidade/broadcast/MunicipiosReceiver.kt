@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import com.example.trabalho3unidade.model.Cidade
+import com.example.trabalho3unidade.model.Clima
 import com.example.trabalho3unidade.model.Estado
 import com.example.trabalho3unidade.repository.SQLiteRepository
 import com.example.trabalho3unidade.retrofit.RetrofitInicializer
@@ -47,5 +48,18 @@ class MunicipiosReceiver : BroadcastReceiver() {
             })
         }
 
+    }
+
+    private fun buscarClimaCidade(cidade: Cidade){
+        var call: Call<Clima> = RetrofitInicializer().openWeatherService().getWeatherByCity(cidade.nome)
+        call.enqueue(object: Callback<Clima>{
+            override fun onResponse(call: Call<Clima>,response: Response<Clima>) {
+                // var clima: Clima = response?.body() ?: Clima()
+            }
+
+            override fun onFailure(call: Call<Clima>, t: Throwable) {
+                Toast.makeText(context, "Erro: Não foi possível carregar o clima da cidade!", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
