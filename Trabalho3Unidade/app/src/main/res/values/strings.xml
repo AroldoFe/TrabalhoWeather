@@ -1,13 +1,4 @@
 <resources>
-    <string name="app_name">Trabalho 3ª Unidade</string>
+    <string name="app_name">WeatherApplication</string>
     <!-- Strings related to login -->
-    <string-array name="estados_array">
-        <item>RN</item>
-    </string-array>
-
-    <string-array name="rn_array">
-        <item>Natal</item>
-        <item>Parnamirim</item>
-        <item>Nova Parnamirim</item>
-    </string-array>
 </resources>

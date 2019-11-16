@@ -3,4 +3,10 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="vermelho">#FF0000</color>
+    <color name="laranja">#FF5500</color>
+    <color name="amarelo">#FFFF00</color>
+    <color name="azul">#21E4B5</color>
+    <color name="azul_escuro">#0040FF</color>
 </resources>

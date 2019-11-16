@@ -13,7 +13,7 @@ class RetrofitInicializer {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         retrofitOpenWeatherMap = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/weather")
+            .baseUrl("https://api.openweathermap.org/data/2.5/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
