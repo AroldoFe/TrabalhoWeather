@@ -4,11 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+
 import com.example.trabalho3unidade.R
 import com.example.trabalho3unidade.adapter.CityAdapter
 import com.example.trabalho3unidade.model.Cidade
 import com.example.trabalho3unidade.model.Estado
 import com.example.trabalho3unidade.repository.SQLiteRepository
+import com.example.trabalho3unidade.service.WeatherService
+
 import kotlinx.android.synthetic.main.activity_city.*
 
 class CityActivity : AppCompatActivity() {
@@ -28,9 +31,9 @@ class CityActivity : AppCompatActivity() {
     }
 
     fun onCityItemClick(cidade: Cidade){
-        var intent = Intent(this, WeatherActivity::class.java)
+        var intent = Intent(this, WeatherService::class.java)
         intent.putExtra("cidade", cidade)
-        startActivity(intent)
+        startService(intent)
     }
 
     fun initRecyclerView(estado: Estado){

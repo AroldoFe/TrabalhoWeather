@@ -1,18 +1,17 @@
 package com.example.trabalho3unidade.service
 
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
+
 import com.example.trabalho3unidade.model.Cidade
 import com.example.trabalho3unidade.model.Estado
 import com.example.trabalho3unidade.repository.SQLiteRepository
 import com.example.trabalho3unidade.retrofit.RetrofitInicializer
 import com.example.trabalho3unidade.utils.LOG
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,10 +24,11 @@ class SaveApiBoundService : Service() {
         this.repository = SQLiteRepository(applicationContext)
         if(repository.list().isNullOrEmpty()){
             this.getEstados()
-        } else{
+        }
+        if(repository.listCidades().isNullOrEmpty()){
             this.getCidades()
         }
-
+        stopSelf()
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -51,7 +51,6 @@ class SaveApiBoundService : Service() {
                     for(estado in estados){
                         repository.save(estado)
                     }
-
                     getCidades()
                 }
 
@@ -64,31 +63,33 @@ class SaveApiBoundService : Service() {
 
     private fun getCidades(){
         /**
-         * Recuperando os Estados
+         * Recuperando as Cidades
          */
-        val estados: List<Estado> = repository.list()
+        var thread = Thread {
+            val estados: List<Estado> = repository.list()
 
-        for(estado in estados){
-            var call: Call<List<Cidade>> = RetrofitInicializer().ibgeService().allMunicipios(estado.id)
+            for(estado in estados){
+                var call: Call<List<Cidade>> =
+                    RetrofitInicializer().ibgeService().allMunicipios(estado.id)
 
-            call.enqueue(object: Callback<List<Cidade>>{
-                override fun onResponse(call: Call<List<Cidade>>, response: Response<List<Cidade>>) {
-                    var cidades: List<Cidade> = response?.body() ?: ArrayList<Cidade>()
-                    Log.d(LOG,"\tAPI IBGE: Salvando as Cidades do ${estado.sigla} : ${cidades[0].toString()}")
-                    for(cidade in cidades){
-                        cidade.UF = estado
-                        repository.save(cidade)
+                call.enqueue(object : Callback<List<Cidade>> {
+                    override fun onResponse( call: Call<List<Cidade>>, response: Response<List<Cidade>> ) {
+                        var cidades: List<Cidade> = response?.body() ?: ArrayList<Cidade>()
+                        for (cidade in cidades) {
+                            cidade.UF = estado
+                            repository.save(cidade)
+                        }
+                        /*if (estado == estados.get(estados.size - 1)) {
+                            stopSelf()
+                        }*/
                     }
-                    if (estado == estados.get(estados.size-1)){
-                        stopSelf()
-                    }
-                }
 
-                override fun onFailure(call: Call<List<Cidade>>, t: Throwable) {
-                    exibirErro("Erro ao recuperar uma cidade")
-                }
-            })
-        }
+                    override fun onFailure(call: Call<List<Cidade>>, t: Throwable) {
+                        exibirErro("Erro ao recuperar uma cidade")
+                    }
+                })
+            }
+        }.start()
     }
 
     private fun exibirErro(message: String){
