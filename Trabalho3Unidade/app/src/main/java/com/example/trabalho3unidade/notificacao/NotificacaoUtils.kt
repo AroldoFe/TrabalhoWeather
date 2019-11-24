@@ -45,7 +45,7 @@ object NotificacaoUtils {
 
         val notificationBuilder = NotificationCompat.Builder(context, CHANEL_ID)
             .setSmallIcon(R.drawable.ic_temperatura)
-            .setContentTitle("${cidade.nome}")
+            .setContentTitle("${clima.name}")
             .setContentText(clima.toString())
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setColor(getColor(clima))
@@ -75,7 +75,7 @@ object NotificacaoUtils {
     }
 
     private fun getColor(clima: Clima): Int{
-        var temp = clima.kelvin2celsius(clima.temp)
+        var temp = clima.kelvin2celsius(clima.main.temp)
         var color = R.color.vermelho
         when{
             temp > 40 -> color = R.color.vermelho
