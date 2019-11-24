@@ -8,6 +8,7 @@ import com.example.trabalho3unidade.model.Cidade
 import com.example.trabalho3unidade.model.Clima
 import com.example.trabalho3unidade.notificacao.NotificacaoUtils
 import com.example.trabalho3unidade.retrofit.RetrofitInicializer
+import com.example.trabalho3unidade.utils.API_KEY
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,7 +29,7 @@ class WeatherService : Service(){
     }
 
     private fun buscarClimaCidade(cidade: Cidade){
-        var call: Call<Clima> = RetrofitInicializer().openWeatherService().getWeatherByCity(cidade.nome)
+        var call: Call<Clima> = RetrofitInicializer().openWeatherService().getWeatherByCity(cidade.nome, API_KEY)
         call.enqueue(object: Callback<Clima> {
             override fun onResponse(call: Call<Clima>, response: Response<Clima>) {
                 var clima: Clima = response?.body() ?: Clima(response.body()!!.name, response.body()!!.temp, response.body()!!.temp_min, response.body()!!.temp_max)
