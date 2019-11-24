@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         cidades = repository.listCidades()
         startService()
 
-        if(estados.size == 0 || cidades.size == 0){
+        if(estados.isEmpty()|| cidades.isEmpty()){
             Thread {
                 try{
                     Thread.sleep(20000)
